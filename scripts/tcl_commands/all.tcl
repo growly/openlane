@@ -211,7 +211,7 @@ proc prep {args} {
     }
 
     if { ! [file exists $::env(DESIGN_CONFIG)] } {
-        puts_err "No design configuration found"
+        puts_err "No design configuration found at $::env(DESIGN_CONFIG)"
         return -code error
     }
 
@@ -336,6 +336,10 @@ proc prep {args} {
         } else {
             puts_info "Sourcing $::env(GLB_CFG_FILE)\nAny changes to the DESIGN config file will NOT be applied"
             source $::env(GLB_CFG_FILE)
+            if { [info exists ::env(CURRENT_DEF)] && $::env(CURRENT_DEF) != 0 } {
+                puts_info "Current DEF: $::env(CURRENT_DEF)."
+                puts_info "Use 'set_def file_name.def' if you'd like to change it."
+            }
             after 1000
         }
     }
@@ -387,8 +391,6 @@ proc prep {args} {
         set ::env(${key}_tmp_file_tag) $value
     }
 
-
-
     set util 	$::env(FP_CORE_UTIL)
     set density $::env(PL_TARGET_DENSITY)
 
@@ -399,6 +401,9 @@ proc prep {args} {
             $::env(TMP_DIR)/$stage  \
             $::env(LOG_DIR)/$stage \
             $::env(REPORTS_DIR)/$stage
+
+        file link -symbolic $::env(TMP_DIR)/$stage/merged.lef ../../tmp/merged.lef
+        file link -symbolic $::env(RESULTS_DIR)/$stage/merged.lef ../../tmp/merged.lef
     }
 
     # Fill config file

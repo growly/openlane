@@ -43,6 +43,10 @@ for { set i 0 } { $i < [llength $::env(VERILOG_FILES)] } { incr i } {
   read_verilog  [lindex $::env(VERILOG_FILES) $i]
 }
 
+select -module $vtop
+show -format dot -prefix $::env(TMP_DIR)/synthesis/hierarchy
+select -clear
+
 hierarchy -check -top $vtop
 if { $::env(SYNTH_FLAT_TOP) } {
 	flatten
@@ -59,4 +63,4 @@ splitnets
 opt_clean -purge
 tee -o "$::env(yosys_report_file_tag)_$chk_ext" check
 tee -o "$::env(yosys_report_file_tag)$stat_ext" stat -top $vtop -liberty $sclib
-write_verilog -noattr -noexpr -nohex -nodec "$::env(SAVE_NETLIST)"
+write_verilog -noattr -noexpr -nohex -nodec -defparam "$::env(SAVE_NETLIST)"

@@ -15,15 +15,17 @@
 OPENLANE_DIR ?= $(shell pwd)
 THREADS ?= $(shell nproc)
 STD_CELL_LIBRARY ?= sky130_fd_sc_hd
+SPECIAL_VOLTAGE_LIBRARY ?= sky130_fd_sc_hvl
+IO_LIBRARY ?= sky130_fd_io
 
-IMAGE_NAME ?= openlane:rc4
+IMAGE_NAME ?= openlane:rc5
 TEST_DESIGN ?= spm
 BENCHMARK ?= regression_results/benchmark_results/SW_HD.csv
 REGRESSION_TAG ?= TEST_SW_HD
 PRINT_REM_DESIGNS_TIME ?= 0
 
-SKYWATER_COMMIT ?= 5cd70ed19fee8ea37c4e8dbd5c5c3eaa9886dd23
-OPEN_PDKS_COMMIT ?= 48db3e1a428ae16f5d4c86e0b7679656cf8afe3d
+SKYWATER_COMMIT ?= d8e2cf1ba006ed01468aa60e7f4e85a1ece74ca4
+OPEN_PDKS_COMMIT ?= 94513d439f76501eacb39701f6e98f3b4f07dcdf
 
 ifndef PDK_ROOT
 $(error PDK_ROOT is undefined, please export it before running make)
@@ -49,7 +51,9 @@ skywater-pdk: $(PDK_ROOT)/skywater-pdk
 skywater-library: $(PDK_ROOT)/skywater-pdk
 	cd $(PDK_ROOT)/skywater-pdk && \
 		git submodule update --init libraries/$(STD_CELL_LIBRARY)/latest && \
-		$(MAKE) -j$(THREADS) $(STD_CELL_LIBRARY)
+		git submodule update --init libraries/$(IO_LIBRARY)/latest && \
+		git submodule update --init libraries/$(SPECIAL_VOLTAGE_LIBRARY)/latest && \
+		$(MAKE) -j$(THREADS) timing
 
 .PHONY: all-skywater-libraries
 all-skywater-libraries: skywater-pdk
@@ -59,6 +63,8 @@ all-skywater-libraries: skywater-pdk
 		git submodule update --init libraries/sky130_fd_sc_hdll/latest && \
 		git submodule update --init libraries/sky130_fd_sc_ms/latest && \
 		git submodule update --init libraries/sky130_fd_sc_ls/latest && \
+		git submodule update --init libraries/sky130_fd_sc_hvl/latest && \
+		git submodule update --init libraries/sky130_fd_io/latest && \
 		$(MAKE) -j$(THREADS) timing
 
 ### OPEN_PDKS
@@ -72,7 +78,7 @@ open_pdks: $(PDK_ROOT)/open_pdks
 
 .PHONY: build-pdk
 build-pdk: $(PDK_ROOT)/open_pdks $(PDK_ROOT)/skywater-pdk
-	[[ -d $(PDK_ROOT)/sky130A ]] && \
+	[ -d $(PDK_ROOT)/sky130A ] && \
 		(echo "Warning: A sky130A build already exists under $(PDK_ROOT). It will be deleted first!" && \
 		sleep 5 && \
 		rm -rf $(PDK_ROOT)/sky130A) || \
@@ -105,7 +111,7 @@ regression_test:
 test:
 	cd $(OPENLANE_DIR) && \
 		docker run -it -v $(OPENLANE_DIR):/openLANE_flow -v $(PDK_ROOT):$(PDK_ROOT) -e PDK_ROOT=$(PDK_ROOT) -u $(shell id -u $(USER)):$(shell id -g $(USER)) $(IMAGE_NAME) sh -c "./flow.tcl -design $(TEST_DESIGN) -tag openlane_test -disable_output -overwrite"
-	@[[ -f $(OPENLANE_DIR)/designs/$(TEST_DESIGN)/runs/openlane_test/results/magic/$(TEST_DESIGN).gds ]] && \
+	@[ -f $(OPENLANE_DIR)/designs/$(TEST_DESIGN)/runs/openlane_test/results/magic/$(TEST_DESIGN).gds ] && \
 		echo "Basic test passed" || \
 		echo "Basic test failed"
 

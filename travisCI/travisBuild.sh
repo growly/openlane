@@ -1,3 +1,4 @@
+#!/bin/bash
 # Copyright 2020 Efabless Corporation
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,9 +19,25 @@ echo $PDK_ROOT
 echo $RUN_ROOT
 make openlane
 make skywater-pdk
-make skywater-library
+
+# The following section is for running on the CI.
+# If you're running locally you should replace them with: `make skywater-library`
+# This is because sometimes while setting up the conda env it fails to fetch something
+# Then it exists without retrying. So, here we're retrying here, and if it something is wrong it will timeout.
+# Section Begin
+cnt=0
+until make skywater-library; do
+cnt=$cnt+1
+if [ $cnt -eq 5 ]; then
+	exit 2
+fi
+rm -rf $PDK_ROOT/skywater-pdk
+make skywater-pdk
+done
+# Section End
+
 make open_pdks
-docker run -it -v $RUN_ROOT:/openLANE_flow -v $PDK_ROOT:$PDK_ROOT -e PDK_ROOT=$PDK_ROOT -u $(id -u $USER):$(id -g $USER) openlane:rc4  bash -c "make build-pdk"
+docker run -it -v $RUN_ROOT:/openLANE_flow -v $PDK_ROOT:$PDK_ROOT -e PDK_ROOT=$PDK_ROOT -u $(id -u $USER):$(id -g $USER) openlane:rc5  bash -c "make build-pdk"
 echo "done installing"
 cd $RUN_ROOT
 exit 0
