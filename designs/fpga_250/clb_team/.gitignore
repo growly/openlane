@@ -1,0 +1,9 @@
+*.swp
+*.o
+*.a
+*.d
+*.vcd
+*.dat
+*obj_dir*
+*waves*
+*logs*

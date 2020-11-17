@@ -1,0 +1,19 @@
+VERSION 5.7 ;
+  NOWIREEXTENSIONATPIN ON ;
+  DIVIDERCHAR "/" ;
+  BUSBITCHARS "[]" ;
+MACRO transgate
+  CLASS BLOCK ;
+  FOREIGN transgate ;
+  ORIGIN 0.340 0.730 ;
+  SIZE 1.090 BY 2.000 ;
+  OBS
+      LAYER li1 ;
+        RECT 0.040 1.050 0.370 1.220 ;
+        RECT -0.120 -0.340 0.090 0.830 ;
+        RECT 0.320 -0.340 0.530 0.830 ;
+        RECT 0.040 -0.680 0.370 -0.510 ;
+  END
+END transgate
+END LIBRARY
+

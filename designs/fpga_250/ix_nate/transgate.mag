@@ -1,0 +1,74 @@
+magic
+tech sky130A
+timestamp 1604020669
+<< nwell >>
+rect -34 29 75 113
+<< nmos >>
+rect 13 -30 28 -5
+<< pmos >>
+rect 13 54 28 81
+<< ndiff >>
+rect -16 -9 13 -5
+rect -16 -26 -10 -9
+rect 7 -26 13 -9
+rect -16 -30 13 -26
+rect 28 -9 57 -5
+rect 28 -26 34 -9
+rect 51 -26 57 -9
+rect 28 -30 57 -26
+<< pdiff >>
+rect -16 75 13 81
+rect -16 58 -10 75
+rect 7 58 13 75
+rect -16 54 13 58
+rect 28 75 57 81
+rect 28 58 34 75
+rect 51 58 57 75
+rect 28 54 57 58
+<< ndiffc >>
+rect -10 -26 7 -9
+rect 34 -26 51 -9
+<< pdiffc >>
+rect -10 58 7 75
+rect 34 58 51 75
+<< poly >>
+rect 4 122 37 127
+rect 4 105 12 122
+rect 29 105 37 122
+rect 4 100 37 105
+rect 13 81 28 100
+rect 13 36 28 54
+rect 13 -5 28 15
+rect 13 -46 28 -30
+rect 4 -51 37 -46
+rect 4 -68 12 -51
+rect 29 -68 37 -51
+rect 4 -73 37 -68
+<< polycont >>
+rect 12 105 29 122
+rect 12 -68 29 -51
+<< locali >>
+rect 4 105 12 122
+rect 29 105 37 122
+rect -12 75 9 83
+rect -12 58 -10 75
+rect 7 58 9 75
+rect -12 -9 9 58
+rect -12 -26 -10 -9
+rect 7 -26 9 -9
+rect -12 -34 9 -26
+rect 32 75 53 83
+rect 32 58 34 75
+rect 51 58 53 75
+rect 32 -9 53 58
+rect 32 -26 34 -9
+rect 51 -26 53 -9
+rect 32 -34 53 -26
+rect 4 -68 12 -51
+rect 29 -68 37 -51
+<< labels >>
+rlabel locali 34 17 51 34 1 B
+rlabel locali -10 17 7 34 1 A
+rlabel polycont 12 -68 29 -51 1 C
+rlabel polycont 12 105 29 122 1 Cnot
+<< end >>

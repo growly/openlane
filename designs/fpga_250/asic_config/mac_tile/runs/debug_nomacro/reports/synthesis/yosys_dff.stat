@@ -1,0 +1,19 @@
+
+23. Printing statistics.
+
+=== mac_tile ===
+
+   Number of wires:              11107
+   Number of wire bits:          21707
+   Number of public wires:          35
+   Number of public wire bits:   10635
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              17776
+     $_ANDNOT_                       1
+     $_MUX_                      11074
+     mac_cluster                     1
+     sky130_fd_sc_hd__dfxtp_4     5536
+     transmission_gate            1164
+
