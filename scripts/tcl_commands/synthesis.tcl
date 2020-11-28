@@ -52,6 +52,9 @@ proc run_yosys {args} {
 	logic_equiv_check -rhs $::env(PREV_NETLIST) -lhs $::env(CURRENT_NETLIST)
     }
 
+    # The following is a naive workaround to the defparam issue.. it should be handled with
+    # an issue to the OpenROAD verilog parser.
+    try_catch sed -ie {/defparam/d} $::env(CURRENT_NETLIST)
 
     TIMER::timer_stop
     exec echo "[TIMER::get_runtime]" >> $::env(yosys_log_file_tag)_runtime.txt
@@ -59,8 +62,12 @@ proc run_yosys {args} {
 
 proc run_sta {args} {
     puts_info "Running Static Timing Analysis..."
-    try_catch sta $::env(SCRIPTS_DIR)/sta.tcl \
-	|& tee $::env(TERMINAL_OUTPUT) $::env(opensta_log_file_tag).log
+    if {[info exists ::env(CLOCK_PORT)]} {
+        try_catch sta $::env(SCRIPTS_DIR)/sta.tcl \
+        |& tee $::env(TERMINAL_OUTPUT) $::env(opensta_log_file_tag).log
+    } else {
+        puts_warn "No CLOCK_PORT found. Skipping STA..."
+    }
 }
 
 proc run_synth_exploration {args} {
