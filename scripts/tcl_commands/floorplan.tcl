@@ -225,6 +225,8 @@ proc run_floorplan {args} {
 				place_io_ol
 		} else {
 			if { [info exists ::env(FP_CONTEXT_DEF)] && [info exists ::env(FP_CONTEXT_LEF)] } {
+				place_io
+				global_placement_or
 				place_contextualized_io \
 					-lef $::env(FP_CONTEXT_LEF) \
 					-def $::env(FP_CONTEXT_DEF)
@@ -250,6 +252,8 @@ proc run_floorplan {args} {
 		if {[info exists  ::env(FP_WELLTAP_CELL)] && $::env(FP_WELLTAP_CELL) ne ""} { 
 				tap_decap_or
 		}
+
+		gen_pdn
 }
 
 package provide openlane 0.9
